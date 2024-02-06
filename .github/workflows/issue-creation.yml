@@ -1,0 +1,80 @@
+
+name: Create Issue on Close
+
+on:
+    workflow_dispatch:
+    create:
+    issues:
+        types: [closed]
+
+permissions: write-all
+
+jobs:
+    create-issue-level-1:
+        if: ${{ github.event_name == 'create' || github.event_name == 'workflow_dispatch' }}
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v3
+              
+            - name: Create first Issue
+              uses: peter-evans/create-issue-from-file@v4
+              with:
+                title: 'Program 1: Sort the string According to the frequency of character'
+                content-filepath: './template/program-1.md'
+                labels: 'level-1'
+
+    create-issue-level-2:        
+        if: ${{ github.event_name == 'issues' && github.event.issue.labels[0].name == 'level-1' }}
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v2
+              
+            - name: Create Issue From File
+              uses: peter-evans/create-issue-from-file@v4
+              with:
+                title: 'Program 2: Maximum Stock Profit'
+                content-filepath: './template/program-2.md'
+                labels: 'level-2'
+
+    create-issue-level-3:        
+        if: ${{ github.event_name == 'issues' && github.event.issue.labels[0].name == 'level-2'}}
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v2
+              
+            - name: Create Issue From File
+              uses: peter-evans/create-issue-from-file@v4
+              with:
+                title: 'Program 3: Validate IP Address'
+                content-filepath: './template/program-3.md'
+                labels: 'level-3'
+    
+    create-issue-level-4:        
+        if: ${{ github.event_name == 'issues' &&  github.event.issue.labels[0].name == 'level-3' }}
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v2
+              
+            - name: Create Issue From File
+              uses: peter-evans/create-issue-from-file@v4
+              with:
+                title: 'Program 4: Sort a linear Array'
+                content-filepath: './template/program-4.md'
+                labels: 'level-4'
+                
+    close:        
+        if: ${{ github.event_name == 'issues' &&  github.event.issue.labels[0].name == 'level-4' }}
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v2
+              
+            - name: Create Issue From File
+              uses: peter-evans/create-issue-from-file@v4
+              with:
+                title: 'Congratulations you have completed all levels of Codeathon'
+                content-filepath: './template/complete.md'
